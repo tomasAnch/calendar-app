@@ -7,24 +7,13 @@ import { addHours, format, parse, startOfWeek, getDay } from 'date-fns';
 import { CalendarEvent, CalendarModal, Navbar } from '../';
 
 import { localizer, getMessagesES } from '../../helpers';
-import { useUiStore } from '../../hooks';
-
-const events = [{
-  title: 'Dia de summons',
-  notes: 'Hay que sumonear',
-  start: new Date(),
-  end: addHours( new Date(), 2 ),
-  bgColor: '#fafafa',
-  user: {
-    _id: '123',
-    name: 'Tomas'
-  }
-}]
+import { useUiStore, useCalendarStore } from '../../hooks';
 
 export const CalendarPage = () => {
 
   const { openDateModal } = useUiStore();
-  const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week' );
+  const { events } = useCalendarStore();
+  const [ lastView, setLastView ] = useState( localStorage.getItem('lastView') || 'week' );
 
   const eventStyleGetter = ( event, start, end, isSelected ) => {
 
