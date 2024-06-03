@@ -20,7 +20,7 @@ export const useAuthStore = () => {
     } catch (error) {
       dispatch( onLogout( 'Credenciales incorrectas ') ); 
       setTimeout(() => {
-        dispatch( clearErrorMessage );
+        dispatch( clearErrorMessage() );
       }, 10);
     }
 
@@ -39,9 +39,26 @@ export const useAuthStore = () => {
       console.log(error);
       dispatch( onLogout( error.response.data?.msg || 'salio mal' ) ); 
       setTimeout(() => {
-        dispatch( clearErrorMessage );
+        dispatch( clearErrorMessage() );
       }, 10);
     }
+  }
+
+  const checkAuthToken = async() => {
+
+    const token = localStorage.getItem('token');
+    if ( !token ) return dispatch( onLogout() );
+
+    try {
+      const { data } = await calendarApi.get('/auth/renew');
+      localStorage.setItem( 'token', data.token );
+      localStorage.setItem( 'token-init-time', new Date().getTime() );
+      dispatch( onLogin({ name: data.name, uid: data.uid }) );
+    } catch (error) {
+      localStorage.clear();
+      dispatch( onLogout() );
+    }
+
   }
 
   return {
@@ -53,6 +70,7 @@ export const useAuthStore = () => {
     //* Métodos
     startLogin,
     startRegister,
+    checkAuthToken,
 
   }
 }
