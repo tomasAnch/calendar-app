@@ -3,7 +3,7 @@ import { LoginPage } from "../auth";
 import { CalendarPage } from "../calendar";
 import { useAuthStore } from "../hooks";
 import { useEffect } from "react";
-import { Spinner } from "../components/Spinner";
+import { Spinner } from "../components/spinner/Spinner";
 
 export const AppRouter = () => {
 
