@@ -1,5 +1,5 @@
-import { calendarSlice, onAddNewEvent, onSetActiveEvent, onUpdateEvent } from "../../../src/store/calendar/calendarSlice"
-import { calendarWithEventsState, events, initialState } from "../../fixtures/calendarStates";
+import { calendarSlice, onAddNewEvent, onDeleteEvent, onLoadEvents, onLogoutCalendar, onSetActiveEvent, onUpdateEvent } from "../../../src/store/calendar/calendarSlice"
+import { calendarWithActiveEventsState, calendarWithEventsState, events, initialState } from "../../fixtures/calendarStates";
 
 describe('Pruebas en calendarSlice', () => {
 
@@ -46,5 +46,31 @@ describe('Pruebas en calendarSlice', () => {
     expect( state.events ).toContain( updatedEvent );
 
   });
+
+  test('onDeleteEvent debe borrar el evento activo', () => {
+
+    const state = calendarSlice.reducer( calendarWithActiveEventsState, onDeleteEvent() );
+    expect( state.activeEvent ).toBe( null );
+    expect( state.events ).not.toContain( events[0] );
+
+  })
+
+  test('onLoadEvent debe establecer los eventos', () => {
+
+    const state = calendarSlice.reducer( initialState, onLoadEvents( events ) );
+    expect( state.isLoadingEvents ).toBeFalsy();
+    expect( state.events ).toEqual( events );
+
+    const newState = calendarSlice.reducer( state, onLoadEvents( events ) );
+    expect( state.events.length ).toBe( events.length );
+
+  });
+
+  test('onLogoutCalendar debe limpiar el estado', () => {
+
+    const state = calendarSlice.reducer( calendarWithActiveEventsState, onLogoutCalendar() );
+    expect( state ).toEqual( initialState );
+
+  })
 
 })
